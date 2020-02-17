@@ -1,57 +1,94 @@
 #include <iostream>
+#include <map>
 #include <string>
 
 class Animal
 {
 public:
-	/// This is the function which will be called to reproduce the sound each
-	/// animal makes.
-	virtual void makeSound() const = 0;
+    /// This is the function which will be called to reproduce the sound each
+    /// animal makes.
+    virtual void makeSound() const = 0;
 
-	/// This is our factory. You need to code the missing implementation.
-	static Animal* create(const std::string& name);
+    /// This is our factory. You need to code the missing implementation.
+    static Animal* create(const std::string& name);
 
-	/// This function will terminate the class instance.
-	static void destroy(Animal* animal)
-	{
-		delete animal;
-	}
+    /// This function will terminate the class instance.
+    static void destroy(Animal* animal)
+    {
+        delete animal;
+    }
+
 };
 
 // Write your classes here
+class AnimalSounds {
+public:
+    AnimalSounds() {
+        m_animalSounds["dog"] = "woof";
+        m_animalSounds["cat"] = "meow";
+        m_animalSounds["bird"] = "tweet";
+        m_animalSounds["mouse"] = "squeek";
+        m_animalSounds["cow"] = "moo";
+        m_animalSounds["frog"] = "croak";
+        m_animalSounds["elephant"] = "toot";
+        m_animalSounds["duck"] = "quack";
+        m_animalSounds["fish"] = "blub";
+        m_animalSounds["seal"] = "ow ow ow";
+    }
+
+    std::string findSound(const std::string& name) {
+        auto it  = m_animalSounds.find(name);
+        if (it == m_animalSounds.end())
+            return "-1";
+        else
+            return m_animalSounds.find(name)->second;
+    }
+
+private:
+    std::map<std::string, std::string> m_animalSounds;
+};
 
 // This is the function you need to change in order to instantiate the required
 // classes.
 Animal* Animal::create(const std::string& name)
 {
-	return 0;
+    AnimalSounds animal;
+    std::string sound = animal.findSound(name);
+
+    (sound != "-1") ? std::cout << sound << "\n"
+                    : std::cout << name << " is not an animal\n";
+    return 0;
 }
+
 
 void makeSound(const std::string& name)
 {
-	// Create our instance
-	Animal* animal = Animal::create(name);
+    // Create our instance
+    Animal* animal = Animal::create(name);
 
-	animal->makeSound();
+    if (!animal)
+        return;
 
-	// Destroy our instance
-	Animal::destroy(animal);
+    animal->makeSound();
+
+    // Destroy our instance
+    Animal::destroy(animal);
 }
 
 int main(int argc, char** argv)
 {
-	int n = 0;
-	std::cin >> n;
+    int n = 0;
+    std::cin >> n;
 
-	while(n--)
-	{
-		std::string animal;
+    while(n--)
+    {
+        std::string animal;
 
-		std::cin.ignore();
-		std::cin >> animal;
+        std::cin.ignore();
+        std::cin >> animal;
 
-		makeSound(animal);
-	}
+        makeSound(animal);
+    }
 
-	return 0;
+    return 0;
 }
